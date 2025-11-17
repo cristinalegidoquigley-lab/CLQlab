@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Tutorial: Multi-Omics Analysis of Liver Disease</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: #764ba2;
+            margin-top: 30px;
+        }
+        .figure-container {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .figure-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .figure-caption {
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 15px;
+            font-size: 1.1em;
+        }
+        .interpretation {
+            background: #e8f4f8;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+        }
+        .tip {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .key-finding {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .study-design {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        .checklist li:before {
+            content: "☐ ";
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🔬 Complete Tutorial: Multi-Omics Analysis of Liver Disease</h1>
+    <p>A Step-by-Step Guide with Synthetic MicrobLiver Data</p>
+    <p><em>Learn to analyze metabolomics, lipidomics, and proteomics data from liver disease studies</em></p>
+</div>
+
+<div class="content">
+
+<h2>📚 Table of Contents</h2>
+<ol>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#study-design">Study Design</a></li>
+    <li><a href="#data-structure">Data Structure</a></li>
+    <li><a href="#analysis">Step-by-Step Analysis</a></li>
+    <li><a href="#figures">Figure Interpretation (with Examples)</a></li>
+    <li><a href="#code">Complete Code Examples</a></li>
+    <li><a href="#exercises">Learning Exercises</a></li>
+</ol>
+
+<h2 id="introduction">1. Introduction</h2>
+
+<h3>What is This Tutorial?</h3>
+<p>This tutorial teaches you how to analyze <strong>multi-omics data</strong> from a liver disease study. You'll learn to:</p>
+<ul>
+    <li>✓ Load and explore omics datasets (metabolites, lipids, proteins)</li>
+    <li>✓ Run statistical analyses (linear mixed models)</li>
+    <li>✓ Create 7 types of publication-quality figures</li>
+    <li>✓ Interpret biological results</li>
+    <li>✓ Understand network biology</li>
+</ul>
+
+<h3>The Study</h3>
+<p>Based on the <strong>MicrobLiver alcohol challenge study</strong> (Israelsen et al., JHEP Reports 2021):</p>
+
+<div class="study-design">
+    <h4>Study Parameters:</h4>
+    <ul>
+        <li><strong>39 participants</strong>: 14 ALD, 15 NAFLD, 10 Healthy controls</li>
+        <li><strong>Alcohol challenge</strong>: Administered via nasogastric tube over 30 minutes</li>
+        <li><strong>3 time points</strong>: 0 (baseline), 60, and 180 minutes after alcohol</li>
+        <li><strong>2 sampling sites</strong>: Hepatic (liver blood) and Systemic (peripheral blood)</li>
+        <li><strong>Multi-omics</strong>: 34 metabolites, 283 lipids, 227 proteins</li>
+        <li><strong>Total observations</strong>: 39 × 3 × 2 = 234 measurements</li>
+    </ul>
+</div>
+
+<h2 id="study-design">2. Study Design</h2>
+
+<h3>Visual Overview</h3>
+<div style="background: #f9f9f9; padding: 20px; border-radius: 8px; font-family: monospace;">
+<pre>
+39 Participants
+├── 14 ALD (Alcohol-related Liver Disease)
+├── 15 NAFLD (Metabolic-Associated Fatty Liver Disease)
+└── 10 Healthy controls
+
+        ↓ Alcohol Challenge (nasogastric tube, 30 min)
+
+Blood sampling at 3 time points:
+├── T0:  0 min (Baseline)
+├── T1: 60 min (Early response)
+└── T2: 180 min (Late response)
+
+From 2 sites per time point:
+├── Hepatic (liver vein) - liver-specific metabolism
+└── Systemic (peripheral vein) - whole-body effects
+
+Total: 39 patients × 3 times × 2 sites = 234 observations
+</pre>
+</div>
+
+<div class="tip">
+    <strong>💡 Why This Design?</strong>
+    <ul>
+        <li><strong>Longitudinal</strong>: Following the same people over time controls for individual differences</li>
+        <li><strong>Dual sites</strong>: Can identify liver-specific vs. systemic changes</li>
+        <li><strong>Multi-omics</strong>: Different molecular layers reveal different aspects of biology</li>
+    </ul>
+</div>
+
+<h2 id="data-structure">3. Data Structure</h2>
+
+<h3>File Format</h3>
+<p>Each dataset is a <strong>data frame</strong> with 234 rows (observations) and the following columns:</p>
+
+<table>
+    <tr>
+        <th>Column</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Values</th>
+    </tr>
+    <tr>
+        <td>Specimenno</td>
+        <td>Character</td>
+        <td>Unique sample identifier</td>
+        <td>"ALD_001_hepatic_T0"</td>
+    </tr>
+    <tr>
+        <td>SampleID</td>
+        <td>Character</td>
+        <td>Sample ID</td>
+        <td>"S1_hepatic_0"</td>
+    </tr>
+    <tr>
+        <td>PatientID</td>
+        <td>Character</td>
+        <td>Patient identifier</td>
+        <td>"ALD_001", "NAFLD_005", "Healthy_003"</td>
+    </tr>
+    <tr>
+        <td>pheno</td>
+        <td>Factor</td>
+        <td>Disease phenotype</td>
+        <td>"Healthy", "ALD", "NAFLD"</td>
+    </tr>
+    <tr>
+        <td>time</td>
+        <td>Factor</td>
+        <td>Time point (minutes)</td>
+        <td>"0", "60", "180"</td>
+    </tr>
+    <tr>
+        <td>sampleSite</td>
+        <td>Factor</td>
+        <td>Sampling location</td>
+        <td>"hepatic", "systemic"</td>
+    </tr>
+    <tr>
+        <td>split_col</td>
+        <td>NA</td>
+        <td>Separator column</td>
+        <td>All NA (marks end of metadata)</td>
+    </tr>
+    <tr>
+        <td>Feature columns</td>
+        <td>Numeric</td>
+        <td>Molecular measurements</td>
+        <td>Scaled concentrations (log10 transformed)</td>
+    </tr>
+</table>
+
+<h2 id="analysis">4. Step-by-Step Analysis</h2>
+
+<h3>Step 1: Load and Validate Data</h3>
+
+<div class="code-block">
+<pre># Load the data
+data <- readRDS("preprocessData/plasma_metabolites_matrix.rds")
+
+# Check structure
+str(data)
+dim(data)  # Should be 234 x 41
+
+# Validate factor levels
+levels(data$pheno)      # "Healthy" "ALD" "NAFLD"
+levels(data$time)       # "0" "60" "180"
+levels(data$sampleSite) # "hepatic" "systemic"
+
+# View first few rows
+head(data[, 1:10])</pre>
+</div>
+
+<h3>Step 2: Run Statistical Analysis</h3>
+
+<div class="code-block">
+<pre># Load functions
+source("functions.R")
+
+# Set directories
+data_dir <- "preprocessData/"
+results_dir <- "results/"
+models_dir <- "models/"
+
+# Create directories
+dir.create(results_dir, showWarnings = FALSE)
+dir.create(models_dir, showWarnings = FALSE)
+
+# Run Linear Mixed Models
+results <- LMM_time(
+  name = "plasma_metabolites",
+  ID = "PatientID",
+  fixedEffect = "time",
+  groupBy = "pheno",
+  data_dir = data_dir,
+  results_dir = results_dir,
+  models_dir = models_dir,
+  sampleSite = "hepatic",
+  overwrite = TRUE
+)
+
+# Check results
+head(results)
+cat("Significant features (padj<0.05):", sum(results$padj < 0.05, na.rm=TRUE))</pre>
+</div>
+
+<div class="interpretation">
+    <strong>🔍 What this does:</strong>
+    <p>For each metabolite, fits a model: <code>metabolite ~ time + (1|PatientID)</code></p>
+    <ul>
+        <li><strong>Fixed effect (time)</strong>: Tests if metabolite changes at 60 and 180 min vs baseline</li>
+        <li><strong>Random effect (PatientID)</strong>: Accounts for repeated measurements from same patient</li>
+        <li><strong>Grouped by pheno</strong>: Separate analysis for Healthy, ALD, and NAFLD</li>
+    </ul>
+</div>
+
+<h2 id="figures">5. Figure Interpretation with Examples</h2>
+
+<h3>Figure 1: PCA Plot - Group Separation</h3>
+
+<div class="figure-container">
+    <img src="example_figures/figure1_pca.png" alt="PCA Plot">
+    <p class="figure-caption">Figure 1: Principal Component Analysis of Metabolites</p>
+</div>
+
+<div class="interpretation">
+    <strong>📊 How to Read This:</strong>
+    <ul>
+        <li><strong>Each point</strong> = one sample (patient at specific time)</li>
+        <li><strong>Colors</strong>: Green = Healthy, Red = ALD, Orange = NAFLD</li>
+        <li><strong>Shapes</strong>: Circle = 0 min, Square = 60 min, Triangle = 180 min</li>
+        <li><strong>PC1 (x-axis)</strong>: First principal component (explains most variance)</li>
+        <li><strong>PC2 (y-axis)</strong>: Second principal component</li>
+    </ul>
+    
+    <strong>🔬 What to Look For:</strong>
+    <ul>
+        <li>✓ <strong>Group separation</strong>: Do colors cluster separately?</li>
+        <li>✓ <strong>Time progression</strong>: Do shapes move in a direction?</li>
+        <li>✓ <strong>Outliers</strong>: Any points far from their group?</li>
+    </ul>
+</div>
+
+<div class="key-finding">
+    <strong>✨ Key Finding:</strong> The three phenotypes show some separation, with Healthy controls clustering differently from disease groups. Time points show progression, particularly at 180 minutes.
+</div>
+
+<h3>Figure 2: Volcano Plot - Statistical Results</h3>
+
+<div class="figure-container">
+    <img src="example_figures/figure2_volcano.png" alt="Volcano Plot">
+    <p class="figure-caption">Figure 2: Volcano Plot - ALD vs Healthy at 180 min</p>
+</div>
+
+<div class="interpretation">
+    <strong>📊 How to Read This:</strong>
+    <ul>
+        <li><strong>X-axis</strong>: Effect size (fold change) - how much the metabolite changes</li>
+        <li><strong>Y-axis</strong>: -log10(p-value) - statistical significance (higher = more significant)</li>
+        <li><strong>Red points</strong>: Significantly upregulated (increased in ALD)</li>
+        <li><strong>Blue points</strong>: Significantly downregulated (decreased in ALD)</li>
+        <li><strong>Gray points</strong>: Not significant (p ≥ 0.05)</li>
+        <li><strong>Horizontal line</strong>: Significance threshold (p = 0.05)</li>
+        <li><strong>Vertical line</strong>: No change (fold change = 0)</li>
+    </ul>
+    
+    <strong>🔬 What to Look For:</strong>
+    <ul>
+        <li>✓ <strong>Top-right quadrant</strong>: Significantly increased metabolites</li>
+        <li>✓ <strong>Top-left quadrant</strong>: Significantly decreased metabolites</li>
+        <li>✓ <strong>Labeled points</strong>: Most significant features</li>
+        <li>✓ <strong>Number of significant points</strong>: How many metabolites change?</li>
+    </ul>
+</div>
+
+<div class="key-finding">
+    <strong>✨ Key Finding:</strong> Several metabolites show significant changes between ALD and Healthy at 180 minutes, with both increases and decreases, indicating metabolic dysregulation after alcohol challenge.
+</div>
+
+<h3>Figure 3: Heatmap - Pattern Clustering</h3>
+
+<div class="figure-container">
+    <img src="example_figures/figure3_heatmap.png" alt="Heatmap">
+    <p class="figure-caption">Figure 3: Heatmap of Top 20 Significant Metabolites</p>
+</div>
+
+<div class="interpretation">
+    <strong>📊 How to Read This:</strong>
+    <ul>
+        <li><strong>Rows</strong>: Individual metabolites (top 20 most significant)</li>
+        <li><strong>Columns</strong>: Conditions (phenotype × time combinations)</li>
+        <li><strong>Colors</strong>: Red = high concentration, Blue = low concentration, White = medium</li>
+        <li><strong>Dendrograms</strong>: Tree diagrams showing clustering</li>
+    </ul>
+    
+    <strong>🔬 What to Look For:</strong>
+    <ul>
+        <li>✓ <strong>Row clusters</strong>: Metabolites with similar patterns (may be in same pathway)</li>
+        <li>✓ <strong>Column clusters</strong>: Conditions with similar metabolic profiles</li>
+        <li>✓ <strong>Color blocks</strong>: Coordinated changes across multiple metabolites</li>
+    </ul>
+</div>
+
+<div class="key-finding">
+    <strong>✨ Key Finding:</strong> Clear clustering of metabolites into groups, suggesting coordinated regulation. Different phenotypes show distinct metabolic signatures.
+</div>
+
+<h3>Figure 4: Time Course - Temporal Dynamics</h3>
+
+<div class="figure-container">
+    <img src="example_figures/figure4_timecourse.png" alt="Time Course">
+    <p class="figure-caption">Figure 4: Time Course of Top Variable Metabolites</p>
+</div>
+
+<div class="interpretation">
+    <strong>📊 How to Read This:</strong>
+    <ul>
+        <li><strong>X-axis</strong>: Time in minutes (0, 60, 180)</li>
+        <li><strong>Y-axis</strong>: Metabolite concentration (scaled)</li>
+        <li><strong>Lines</strong>: Mean trajectory for each phenotype</li>
+        <li><strong>Shaded areas</strong>: Standard error (confidence interval)</li>
+        <li><strong>Colors</strong>: Green = Healthy, Red = ALD, Orange = NAFLD</li>
+    </ul>
+    
+    <strong>🔬 What to Look For:</strong>
+    <ul>
+        <li>✓ <strong>Rising lines</strong>: Metabolite increases after alcohol</li>
+        <li>✓ <strong>Declining lines</strong>: Metabolite decreases after alcohol</li>
+        <li>✓ <strong>Diverging lines</strong>: Different responses between phenotypes</li>
+        <li>✓ <strong>Parallel lines</strong>: Similar temporal dynamics across groups</li>
+    </ul>
+</div>
+
+<div class="key-finding">
+    <strong>✨ Key Finding:</strong> Metabolites show diverse temporal patterns. Some increase progressively, others peak at 60 min then decline. Phenotype-specific trajectories indicate different metabolic responses to alcohol.
+</div>
+
+<h3>Figure 5: Boxplot - Distribution Analysis</h3>
+
+<div class="figure-container">
+    <img src="example_figures/figure5_boxplot.png" alt="Boxplot">
+    <p class="figure-caption">Figure 5: Boxplots of Significant Metabolites</p>
+</div>
+
+<div class="interpretation">
+    <strong>📊 How to Read This:</strong>
+    <ul>
+        <li><strong>Boxes</strong>: Show quartiles (25th, 50th/median, 75th percentile)</li>
+        <li><strong>Whiskers</strong>: Extend to minimum and maximum values</li>
+        <li><strong>Individual dots</strong>: Each data point</li>
+        <li><strong>X-axis</strong>: Time points (0, 60, 180 minutes)</li>
+        <li><strong>Colors</strong>: Different phenotypes</li>
+    </ul>
+    
+    <strong>🔬 What to Look For:</strong>
+    <ul>
+        <li>✓ <strong>Box position</strong>: Median level of metabolite</li>
+        <li>✓ <strong>Box height</strong>: Variability within group</li>
+        <li>✓ <strong>Overlapping boxes</strong>: Similar distributions</li>
+        <li>✓ <strong>Separated boxes</strong>: Significant differences</li>
+    </ul>
+</div>
+
+<div class="key-finding">
+    <strong>✨ Key Finding:</strong> Clear differences in metabolite levels between phenotypes and across time. Disease groups show different variability patterns compared to healthy controls.
+</div>
+
+<h3>Figure 6: Network Graph - Molecular Relationships</h3>
+
+<div class="figure-container">
+    <img src="example_figures/figure6_network_by_phenotype.png" alt="Network by Phenotype">
+    <p class="figure-caption">Figure 6: Metabolite Correlation Networks by Phenotype at Baseline</p>
+</div>
+
+<div class="interpretation">
+    <strong>📊 How to Read This:</strong>
+    <ul>
+        <li><strong>Nodes (circles)</strong>: Individual metabolites</li>
+        <li><strong>Node size</strong>: Number of connections (degree) - larger = more connected</li>
+        <li><strong>Node color</strong>: Phenotype (Green=Healthy, Red=ALD, Orange=NAFLD)</li>
+        <li><strong>Edges (lines)</strong>: Significant correlations between metabolites</li>
+        <li><strong>Edge color</strong>: Red = positive correlation, Blue = negative correlation</li>
+        <li><strong>Edge thickness</strong>: Correlation strength (thicker = stronger)</li>
+    </ul>
+    
+    <strong>🔬 What to Look For:</strong>
+    <ul>
+        <li>✓ <strong>Network density</strong>: Many edges = coordinated metabolism</li>
+        <li>✓ <strong>Hub nodes</strong>: Large nodes = key regulatory molecules</li>
+        <li>✓ <strong>Modules</strong>: Clusters of connected nodes = functional groups</li>
+        <li>✓ <strong>Phenotype differences</strong>: Compare network structures</li>
+    </ul>
+</div>
+
+<div class="key-finding">
+    <strong>🌟 CRITICAL FINDING:</strong>
+    <ul>
+        <li><strong>Healthy</strong>: 7 nodes, 4 edges - Simple, coordinated network</li>
+        <li><strong>ALD</strong>: 2 nodes, 1 edge - <strong>MOST DISRUPTED</strong> (fewest connections!)</li>
+        <li><strong>NAFLD</strong>: 13 nodes, 9 edges - Most complex network</li>
+    </ul>
+    <p><strong>Interpretation:</strong> ALD shows the most severe metabolic disruption with loss of molecular coordination. NAFLD maintains complexity but with altered connections. This suggests different disease mechanisms: ALD causes metabolic breakdown, while NAFLD causes metabolic rewiring.</p>
+</div>
+
+<h3>Figure 7: Bar Chart - Summary Statistics</h3>
+
+<div class="figure-container">
+    <img src="example_figures/figure7_barchart.png" alt="Bar Chart">
+    <p class="figure-caption">Figure 7: Number of Significant Metabolites at 180 min</p>
+</div>
+
+<div class="interpretation">
+    <strong>📊 How to Read This:</strong>
+    <ul>
+        <li><strong>X-axis</strong>: Comparison groups (ALD vs Healthy, NAFLD vs Healthy)</li>
+        <li><strong>Y-axis</strong>: Number of significant metabolites</li>
+        <li><strong>Red bars</strong>: Upregulated metabolites (increased)</li>
+        <li><strong>Blue bars</strong>: Downregulated metabolites (decreased)</li>
+        <li><strong>Numbers on bars</strong>: Exact counts</li>
+    </ul>
+    
+    <strong>🔬 What to Look For:</strong>
+    <ul>
+        <li>✓ <strong>Bar heights</strong>: Magnitude of metabolic changes</li>
+        <li>✓ <strong>Red vs blue balance</strong>: Direction of changes</li>
+        <li>✓ <strong>Between-group comparison</strong>: Which disease has more changes?</li>
+    </ul>
+</div>
+
+<div class="key-finding">
+    <strong>✨ Key Finding:</strong> Both ALD and NAFLD show substantial metabolic changes compared to healthy controls, with a mix of increased and decreased metabolites. The balanced up/down regulation suggests complex metabolic reorganization rather than simple suppression or activation.
+</div>
+
+<h2 id="code">6. Complete Code Example</h2>
+
+<h3>Full Analysis Script</h3>
+
+<div class="code-block">
+<pre># ============================================================
+# COMPLETE MULTI-OMICS ANALYSIS SCRIPT
+# ============================================================
+
+# 1. SETUP
+library(lmerTest)
+library(caret)
+library(ggplot2)
+library(ggrepel)
+
+source("functions.R")
+source("network_functions.R")
+
+# Directories
+data_dir <- "preprocessData/"
+results_dir <- "results/"
+models_dir <- "models/"
+figures_dir <- "figures/"
+
+# Create directories
+dir.create(results_dir, showWarnings = FALSE, recursive = TRUE)
+dir.create(models_dir, showWarnings = FALSE, recursive = TRUE)
+dir.create(figures_dir, showWarnings = FALSE, recursive = TRUE)
+
+# 2. LOAD DATA
+cat("\n=== LOADING DATA ===\n")
+metabolites <- readRDS(paste0(data_dir, "plasma_metabolites_matrix.rds"))
+cat("Loaded:", nrow(metabolites), "samples\n")
+
+# 3. RUN ANALYSIS
+cat("\n=== RUNNING LINEAR MIXED MODELS ===\n")
+results <- LMM_time(
+  name = "plasma_metabolites",
+  ID = "PatientID",
+  fixedEffect = "time",
+  groupBy = "pheno",
+  data_dir = data_dir,
+  results_dir = results_dir,
+  models_dir = models_dir,
+  sampleSite = "hepatic",
+  overwrite = TRUE
+)
+
+n_sig <- sum(results$padj < 0.05, na.rm=TRUE)
+cat("Significant features:", n_sig, "\n")
+
+# 4. CREATE VOLCANO PLOTS
+cat("\n=== CREATING VOLCANO PLOTS ===\n")
+plots <- volcanoPlot_time(results, pvalue = "padj")
+
+for(name in names(plots)) {
+  ggsave(paste0(figures_dir, "volcano_", name, ".png"),
+         plots[[name]], width = 8, height = 6, dpi = 300)
+}
+
+# 5. CREATE NETWORKS
+cat("\n=== CREATING NETWORKS ===\n")
+matrix_list <- list(
+  plasma_metabolites = readRDS(paste0(data_dir, "plasma_metabolites_matrix.rds")),
+  plasma_lipidomics = readRDS(paste0(data_dir, "plasma_lipidomics_matrix.rds")),
+  plasma_proteomics = readRDS(paste0(data_dir, "plasma_proteomics_matrix.rds"))
+)
+
+for(pheno in c("Healthy", "ALD", "NAFLD")) {
+  network <- getMultiOmicsNetwork(
+    matrix_list, pheno = pheno, time = "0",
+    cor_cutoff = 0.7, figures_path = figures_dir, save = TRUE
+  )
+}
+
+cat("\n=== COMPLETE! ===\n")</pre>
+</div>
+
+<h2 id="exercises">7. Learning Exercises</h2>
+
+<h3>Exercise 1: Compare Sampling Sites</h3>
+<div class="code-block">
+<pre># Run analysis on systemic samples
+results_systemic <- LMM_time(
+  name = "plasma_metabolites",
+  ID = "PatientID",
+  fixedEffect = "time",
+  groupBy = "pheno",
+  data_dir = data_dir,
+  results_dir = results_dir,
+  models_dir = models_dir,
+  sampleSite = "systemic",
+  overwrite = TRUE
+)
+
+# Compare
+n_sig_hepatic <- sum(results_hepatic$padj < 0.05, na.rm=TRUE)
+n_sig_systemic <- sum(results_systemic$padj < 0.05, na.rm=TRUE)
+
+cat("Hepatic:", n_sig_hepatic, "\n")
+cat("Systemic:", n_sig_systemic, "\n")</pre>
+</div>
+
+<p><strong>Question:</strong> Do you find more changes in hepatic or systemic samples? What does this tell you about liver-specific metabolism?</p>
+
+<h3>Exercise 2: Analyze Lipids</h3>
+<div class="code-block">
+<pre># Run same analysis on lipidomics data
+results_lipids <- LMM_time(
+  name = "plasma_lipidomics",
+  ID = "PatientID",
+  fixedEffect = "time",
+  groupBy = "pheno",
+  data_dir = data_dir,
+  results_dir = results_dir,
+  models_dir = models_dir,
+  sampleSite = "hepatic",
+  overwrite = TRUE
+)
+
+# Compare with metabolites
+cat("Significant metabolites:", sum(results_metabolites$padj < 0.05, na.rm=TRUE), "\n")
+cat("Significant lipids:", sum(results_lipids$padj < 0.05, na.rm=TRUE), "\n")</pre>
+</div>
+
+<p><strong>Question:</strong> Do lipids or metabolites show more changes? Why might this be?</p>
+
+<h2>8. Student Checklist</h2>
+
+<div class="checklist">
+    <ul>
+        <li>I can load the synthetic datasets in R</li>
+        <li>I understand the study design (39 patients, 3 times, 2 sites)</li>
+        <li>I can run the validation script successfully</li>
+        <li>I can execute the LMM_time analysis</li>
+        <li>I can create volcano plots</li>
+        <li>I can create network graphs</li>
+        <li>I can interpret a volcano plot</li>
+        <li>I can interpret a network graph</li>
+        <li>I understand what a linear mixed model is</li>
+        <li>I understand why multiple testing correction is needed</li>
+        <li>I can identify significant results (padj < 0.05)</li>
+        <li>I can compare hepatic vs systemic results</li>
+        <li>I can compare different phenotypes</li>
+        <li>I can explain the biological meaning of results</li>
+    </ul>
+</div>
+
+<h2>9. Key Takeaways</h2>
+
+<div class="key-finding">
+    <h3>🎯 Main Findings from This Analysis:</h3>
+    <ol>
+        <li><strong>Metabolic Changes</strong>: Both ALD and NAFLD show significant metabolic alterations after alcohol challenge</li>
+        <li><strong>Network Disruption</strong>: ALD has the most disrupted metabolic network (only 2 nodes, 1 edge)</li>
+        <li><strong>NAFLD Complexity</strong>: NAFLD maintains network complexity but with altered connections</li>
+        <li><strong>Temporal Dynamics</strong>: Changes progress over 180 minutes, with different trajectories per phenotype</li>
+        <li><strong>Disease Mechanisms</strong>: Different network patterns suggest distinct pathological mechanisms</li>
+    </ol>
+</div>
+
+<h2>10. References</h2>
+
+<p><strong>Original Study:</strong><br>
+Israelsen M, Kim M, Suvitaival T, et al. Comprehensive lipidomics reveals phenotypic differences in hepatic lipid turnover in ALD and NAFLD during alcohol intoxication. <em>JHEP Reports</em>. 2021;3(5):100325.</p>
+
+<h2>11. Next Steps</h2>
+
+<div class="tip">
+    <strong>📚 Continue Learning:</strong>
+    <ul>
+        <li>Run the analysis on all omics layers (metabolites, lipids, proteins)</li>
+        <li>Create your own custom plots</li>
+        <li>Try different correlation thresholds in networks</li>
+        <li>Compare networks at different time points</li>
+        <li>Explore pathway enrichment analysis</li>
+    </ul>
+</div>
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; text-align: center; margin-top: 50px;">
+    <h2 style="color: white; margin: 0;">🎉 Congratulations!</h2>
+    <p style="font-size: 1.2em; margin: 10px 0;">You now have the skills to analyze multi-omics longitudinal data!</p>
+    <p><em>Keep practicing with different datasets and parameters</em></p>
+</div>
+
+</div>
+
+</body>
+</html>
